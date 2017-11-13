@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Latte</string>
+    <string name="meituan_select_view">美团菜单选择</string>
+    <string name="ccfin_cheap_detail">真爱通优惠详情页</string>
+</resources>

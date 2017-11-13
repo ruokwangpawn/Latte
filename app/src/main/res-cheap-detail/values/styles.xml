@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--TabLayout的Style：TextView粗体-->
+    <style name="TabLayoutBoldText" parent="TextAppearance.Design.Tab">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15dp</item>
+    </style>
+
+    <!--自定义DialogTheme-->
+    <style name="CustomDialog" parent="@android:style/Theme.Dialog">
+        <!--设置Dialog没有边框-->
+        <item name="android:windowFrame">@null</item>
+        <!--是否浮现在activity之上-->
+        <item name="android:windowIsFloating">true</item>
+        <!--半透明-->
+        <item name="android:windowIsTranslucent">false</item>
+        <!--无标题-->
+        <item name="android:windowNoTitle">true</item>
+        <!--window背景透明-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--是否充许对话框的背景变暗。为true则充许变暗-->
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+</resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.pawn.latte.MainActivity">
+
+    <Button
+        android:id="@+id/bt_meituan_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/meituan_select_view" />
+
+    <Button
+        android:id="@+id/bt_cheap_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/bt_meituan_select"
+        android:layout_toRightOf="@id/bt_meituan_select"
+        android:text="@string/ccfin_cheap_detail" />
+
+</RelativeLayout>

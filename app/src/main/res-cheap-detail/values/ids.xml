@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--ExpandTextView中定义两个ID-->
+    <item name="id_source_textview" type="id" />
+    <item name="id_expand_textview" type="id" />
+
+</resources>
