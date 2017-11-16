@@ -1,6 +1,7 @@
 package org.goldian.ccfin_core.net.callback;
 
 import android.os.Handler;
+import android.support.annotation.NonNull;
 
 import org.goldian.ccfin_core.app.ConfigKeys;
 import org.goldian.ccfin_core.app.Latte;
@@ -30,7 +31,7 @@ public final class RequestCallback implements Callback<String> {
     }
 
     @Override
-    public void onResponse(Call<String> call, Response<String> response) {
+    public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
         if (response.isSuccessful()) {
             if (call.isExecuted()) {
                 if (SUCCESS != null) {
@@ -46,7 +47,7 @@ public final class RequestCallback implements Callback<String> {
     }
 
     @Override
-    public void onFailure(Call<String> call, Throwable t) {
+    public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
         if (FAILURE != null) {
             FAILURE.onFailure(t);
         }
@@ -56,6 +57,9 @@ public final class RequestCallback implements Callback<String> {
         onRequestFinish();
     }
 
+    /**
+     * 请求结束后，将params清空
+     */
     private void onRequestFinish() {
         final long delayed = Latte.getConfiguration(ConfigKeys.LOADER_DELAYED);
         HANDLER.postDelayed(new Runnable() {

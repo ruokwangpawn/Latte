@@ -1,4 +1,4 @@
-package com.pawn.latte.base;
+package com.pawn.latte.base.lv;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -42,16 +42,16 @@ public abstract class BaseLvAdapter<T> extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LvViewHolder viewHolder = getViewHolder(convertView, parent);
+        BaseLvViewHolder viewHolder = getViewHolder(convertView, parent);
         convert(viewHolder, getItem(position), position);
         return viewHolder.getCovertview();
     }
 
-    public abstract void convert(LvViewHolder viewHolder, T item, int position);
+    public abstract void convert(BaseLvViewHolder viewHolder, T item, int position);
 
-    private LvViewHolder getViewHolder(View convertView, ViewGroup parent) {
+    private BaseLvViewHolder getViewHolder(View convertView, ViewGroup parent) {
 
-        return LvViewHolder.get(mInflater, convertView, parent, itemLayoutId);
+        return BaseLvViewHolder.get(mInflater, convertView, parent, itemLayoutId);
     }
 
 }

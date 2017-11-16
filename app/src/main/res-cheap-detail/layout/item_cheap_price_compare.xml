@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="75dp"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/iv_app_logo"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_13"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/tv_dis_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_20"
+        android:layout_toRightOf="@id/iv_app_logo"
+        android:text="【真爱通】招商银行：满100减35"
+        android:textColor="#333333"
+        android:textSize="@dimen/dp_13"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_pre_money"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_dis_title"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_toRightOf="@id/iv_app_logo"
+        android:text="￥100.00"
+        android:textColor="#666666"
+        android:textSize="@dimen/dp_11" />
+
+    <TextView
+        android:id="@+id/tv_dis_money"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_dis_title"
+        android:layout_marginLeft="@dimen/dp_12"
+        android:layout_marginTop="@dimen/dp_4"
+        android:layout_toRightOf="@id/tv_pre_money"
+        android:gravity="bottom"
+        android:text="￥65.00"
+        android:textColor="#EF3F3F"
+        android:textSize="@dimen/dp_17" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="#DFDFDF" />
+
+</RelativeLayout>

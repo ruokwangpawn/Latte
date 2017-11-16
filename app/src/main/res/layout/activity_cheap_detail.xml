@@ -7,24 +7,63 @@
     android:orientation="vertical"
     tools:context="com.pawn.latte.ccfin_cheap_detail.CheapDetailActivity">
 
-    <include layout="@layout/cheap_detail_top" />
-
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tablayout"
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_48"
-        app:tabGravity="fill"
-        app:tabIndicatorColor="#D5AC6C"
-        app:tabIndicatorHeight="2px"
-        app:tabMode="fixed"
-        app:tabSelectedTextColor="#D5AC6C"
-        app:tabTextAppearance="@style/TabLayoutBoldText"
-        app:tabTextColor="#333333" />
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/cheap_detail_top" />
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tablayout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_48"
+                app:tabGravity="fill"
+                app:tabIndicatorColor="#D5AC6C"
+                app:tabIndicatorHeight="2px"
+                app:tabMode="fixed"
+                app:tabSelectedTextColor="#D5AC6C"
+                app:tabTextAppearance="@style/TabLayoutBoldText"
+                app:tabTextColor="#333333">
+
+                <android.support.design.widget.TabItem
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="优惠详情" />
+
+                <android.support.design.widget.TabItem
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="买单比价" />
+
+            </android.support.design.widget.TabLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.pawn.latte.ccfin_cheap_detail.view.ScrollListView
+                    android:id="@+id/lv_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@null" />
+
+                <com.pawn.latte.ccfin_cheap_detail.view.ScrollListView
+                    android:id="@+id/lv_price_compare"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@null"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

@@ -38,7 +38,7 @@
         android:layout_height="1px"
         android:background="#DFDFDF" />
 
-    <com.pawn.latte.ccfin_cheap_detail.view.MyListView
+    <com.pawn.latte.ccfin_cheap_detail.view.ScrollListView
         android:id="@+id/lv_other_mc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

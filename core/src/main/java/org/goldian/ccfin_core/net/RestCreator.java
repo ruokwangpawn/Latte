@@ -2,12 +2,14 @@ package org.goldian.ccfin_core.net;
 
 import org.goldian.ccfin_core.app.ConfigKeys;
 import org.goldian.ccfin_core.app.Latte;
+import org.goldian.ccfin_core.net.rx.RxRestService;
 
 import java.util.WeakHashMap;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
@@ -52,6 +54,7 @@ public final class RestCreator {
                 .baseUrl(BASE_URL)
                 .client(OKHttpHolder.OKHTTP_CLIENT)
                 .addConverterFactory(ScalarsConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
     }
 
@@ -62,6 +65,15 @@ public final class RestCreator {
 
     public static RestService getRestService() {
         return RestServiceHolder.REST_SERVICE;
+    }
+
+    private static final class RxRestServiceHolder {
+        private static final RxRestService RX_REST_SERVICE =
+                RetrofitHolder.RETROFIT_CLIENT.create(RxRestService.class);
+    }
+
+    public static RxRestService getRxRestService() {
+        return RxRestServiceHolder.RX_REST_SERVICE;
     }
 
 }

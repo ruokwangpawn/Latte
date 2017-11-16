@@ -9,17 +9,17 @@ import android.widget.ListView;
  *
  * @author Mymine.
  */
-public class MyListView extends ListView {
+public class ScrollListView extends ListView {
 
-    public MyListView(Context context) {
+    public ScrollListView(Context context) {
         super(context);
     }
 
-    public MyListView(Context context, AttributeSet attrs) {
+    public ScrollListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public MyListView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ScrollListView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -30,4 +30,5 @@ public class MyListView extends ListView {
         super.onMeasure(widthMeasureSpec, expandSpec);
 
     }
+
 }

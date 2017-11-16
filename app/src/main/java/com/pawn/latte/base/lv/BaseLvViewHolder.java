@@ -1,4 +1,4 @@
-package com.pawn.latte.base;
+package com.pawn.latte.base.lv;
 
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -9,22 +9,22 @@ import android.view.ViewGroup;
  * Created by Pawn on 2017/8/18 16.
  */
 
-public class LvViewHolder {
+public class BaseLvViewHolder {
 
     private final SparseArray<View> mViews;
     private View mConvertview;
 
-    private LvViewHolder(LayoutInflater inflater, ViewGroup parent, int layoutId) {
+    private BaseLvViewHolder(LayoutInflater inflater, ViewGroup parent, int layoutId) {
         this.mViews = new SparseArray<>();
         mConvertview = inflater.inflate(layoutId, parent, false);
         mConvertview.setTag(this);
     }
 
-    public static LvViewHolder get(LayoutInflater inflater, View convertview, ViewGroup parent, int layoutId) {
+    public static BaseLvViewHolder get(LayoutInflater inflater, View convertview, ViewGroup parent, int layoutId) {
         if (convertview == null) {
-            return new LvViewHolder(inflater, parent, layoutId);
+            return new BaseLvViewHolder(inflater, parent, layoutId);
         } else {
-            return (LvViewHolder) convertview.getTag();
+            return (BaseLvViewHolder) convertview.getTag();
         }
     }
 
