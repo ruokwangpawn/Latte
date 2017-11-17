@@ -78,6 +78,8 @@ public class CheapDetailActivity extends AppCompatActivity {
         View detailBottomView = LayoutInflater.from(this).inflate(R.layout.cheap_detail_bottom, null);
         DetailBottomViewHolder bottomViewHolder = new DetailBottomViewHolder(detailBottomView);
 
+        scrollView.smoothScrollTo(0, 0);
+
         lvDetail.addFooterView(detailBottomView);
         detailAdapter = new BaseLvAdapter<DiscountListBean>(this, cheapDetailList, R.layout.item_cheap_detail) {
             @Override
@@ -140,7 +142,7 @@ public class CheapDetailActivity extends AppCompatActivity {
                 tvPreMoney.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
             }
         });
-        scrollView.smoothScrollTo(0, 0);
+
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -157,7 +159,7 @@ public class CheapDetailActivity extends AppCompatActivity {
                     lvDetail.setVisibility(View.GONE);
                     lvPriceCompare.setVisibility(View.VISIBLE);
                 }
-                scrollView.smoothScrollTo(0, scrollY);
+                scrollView.smoothScrollTo(0, 0);
             }
 
             @Override

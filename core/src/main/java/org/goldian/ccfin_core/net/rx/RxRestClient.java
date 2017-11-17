@@ -2,6 +2,8 @@ package org.goldian.ccfin_core.net.rx;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+
 import org.goldian.ccfin_core.net.HttpMethod;
 import org.goldian.ccfin_core.net.RestCreator;
 
@@ -10,6 +12,10 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.RequestBody;
 
 /**
@@ -64,6 +70,30 @@ public final class RxRestClient {
                 break;
             default:
                 break;
+        }
+
+        if (observable != null) {
+            observable.doOnSubscribe(new Consumer<Disposable>() {
+                @Override
+                public void accept(Disposable disposable) throws Exception {
+
+                }
+            }).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<String>() {
+                        @Override
+                        public void accept(String s) throws Exception {
+                            Gson gson = new Gson();
+                            Object o = gson.fromJson(s, Object.class);
+
+
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+
+                        }
+                    });
         }
 
         return observable;
