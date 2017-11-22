@@ -1,60 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/scrollView"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scrollbars="none">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <ListView
+        android:id="@+id/lv_detail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:dividerHeight="@dimen/dp_0"
+        android:scrollbars="none" />
 
-        <include layout="@layout/cheap_detail_top" />
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tablayout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_48"
-            app:tabGravity="fill"
-            app:tabIndicatorColor="#D5AC6C"
-            app:tabIndicatorHeight="2px"
-            app:tabMode="fixed"
-            app:tabSelectedTextColor="#D5AC6C"
-            app:tabTextAppearance="@style/TabLayoutBoldText"
-            app:tabTextColor="#333333">
-
-            <android.support.design.widget.TabItem
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="优惠详情" />
-
-            <android.support.design.widget.TabItem
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="买单比价" />
-
-        </android.support.design.widget.TabLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.pawn.latte.ccfin_cheap_detail.view.ScrollListView
-                android:id="@+id/lv_detail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@null" />
-
-            <com.pawn.latte.ccfin_cheap_detail.view.ScrollListView
-                android:id="@+id/lv_price_compare"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@null"
-                android:visibility="gone" />
-
-        </FrameLayout>
-
-    </LinearLayout>
-</ScrollView>
+</RelativeLayout>

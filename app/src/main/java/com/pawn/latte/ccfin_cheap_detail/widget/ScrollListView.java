@@ -1,4 +1,4 @@
-package com.pawn.latte.ccfin_cheap_detail.view;
+package com.pawn.latte.ccfin_cheap_detail.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;

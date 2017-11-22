@@ -38,11 +38,13 @@
         android:layout_height="1px"
         android:background="#DFDFDF" />
 
-    <com.pawn.latte.ccfin_cheap_detail.view.ScrollListView
+    <com.pawn.latte.ccfin_cheap_detail.widget.ScrollListView
         android:id="@+id/lv_other_mc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@null"
+        android:background="@color/white"
+        android:divider="#DFDFDF"
+        android:dividerHeight="1px"
         android:scrollbars="none" />
 
     <include layout="@layout/space_20px" />
@@ -79,15 +81,11 @@
         android:layout_height="1px"
         android:background="#DFDFDF" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_45"
-        android:background="#EEEEEE" />
-
     <Button
         android:id="@+id/bt_pay"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_45"
         android:background="#D5AC6C"
         android:text="支付"
         android:textColor="@color/white" />

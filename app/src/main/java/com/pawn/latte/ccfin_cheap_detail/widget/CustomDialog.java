@@ -1,4 +1,4 @@
-package com.pawn.latte.ccfin_cheap_detail.view;
+package com.pawn.latte.ccfin_cheap_detail.widget;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -17,7 +17,6 @@ import org.goldian.ccfin_core.utils.DisplayUtil;
 
 public class CustomDialog extends Dialog {
 
-    private Context context;
     private int height, width;
     private boolean cancelTouchOut;
     private boolean cancelable;
@@ -25,7 +24,6 @@ public class CustomDialog extends Dialog {
 
     private CustomDialog(Build build) {
         super(build.context);
-        context = build.context;
         height = build.height;
         width = build.width;
         cancelTouchOut = build.cancelTouchOut;
@@ -35,7 +33,6 @@ public class CustomDialog extends Dialog {
 
     private CustomDialog(Build build, int style) {
         super(build.context, style);
-        context = build.context;
         height = build.height;
         width = build.width;
         cancelTouchOut = build.cancelTouchOut;
@@ -87,7 +84,7 @@ public class CustomDialog extends Dialog {
         }
 
         public Build heightDp(int heightDp) {
-            this.height = DisplayUtil.dip2px(context, heightDp);
+            this.height = DisplayUtil.dp2px(context, heightDp);
             return this;
         }
 
@@ -102,7 +99,7 @@ public class CustomDialog extends Dialog {
         }
 
         public Build widthDp(int widthDp) {
-            this.width = DisplayUtil.dip2px(context, widthDp);
+            this.width = DisplayUtil.dp2px(context, widthDp);
             return this;
         }
 

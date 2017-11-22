@@ -23,6 +23,7 @@ import retrofit2.Callback;
 public final class RestClient {
 
     private static final WeakHashMap<String, Object> PARAMS = RestCreator.getParams();
+    private static final WeakHashMap<String, String> HEADERS = RestCreator.getHeaders();
     private final String URL;
     private final String DOWNLOAD_DIR;
     private final String EXTENSION;
@@ -35,11 +36,12 @@ public final class RestClient {
     private final File FILE;
     private final Context CONTEXT;
 
-    RestClient(String url, Map<String, Object> params,
+    RestClient(String url, Map<String, Object> params, Map<String, String> headers,
                String downloadDir, String extension, String name, File file,
                IRequest iRequest, ISuccess iSuccess, IFailure iFailure, IError iError,
                RequestBody body, Context context) {
         this.URL = url;
+        HEADERS.putAll(headers);
         PARAMS.putAll(params);
         this.DOWNLOAD_DIR = downloadDir;
         this.EXTENSION = extension;
@@ -67,22 +69,22 @@ public final class RestClient {
 
         switch (method) {
             case GET:
-                call = service.get(URL, PARAMS);
+                call = service.get(URL, PARAMS, HEADERS);
                 break;
             case POST:
-                call = service.post(URL, PARAMS);
+                call = service.post(URL, PARAMS, HEADERS);
                 break;
             case POST_RAW:
-                call = service.postRaw(URL, BODY);
+                call = service.postRaw(URL, BODY, HEADERS);
                 break;
             case PUT:
-                call = service.put(URL, PARAMS);
+                call = service.put(URL, PARAMS, HEADERS);
                 break;
             case PUT_RAW:
-                call = service.putRaw(URL, BODY);
+                call = service.putRaw(URL, BODY, HEADERS);
                 break;
             case DELETE:
-                call = service.delete(URL, PARAMS);
+                call = service.delete(URL, PARAMS, HEADERS);
                 break;
             case UPLOAD:
 

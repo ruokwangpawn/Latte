@@ -11,6 +11,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.HeaderMap;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -26,24 +27,36 @@ import retrofit2.http.Url;
 public interface RxRestService {
 
     @GET
-    Observable<String> get(@Url String url, @QueryMap WeakHashMap<String, Object> params);
+    Observable<String> get(@Url String url,
+                           @QueryMap WeakHashMap<String, Object> params,
+                           @HeaderMap WeakHashMap<String, String> headers);
 
     @FormUrlEncoded
     @POST
-    Observable<String> post(@Url String url, @FieldMap WeakHashMap<String, Object> params);
+    Observable<String> post(@Url String url,
+                            @FieldMap WeakHashMap<String, Object> params,
+                            @HeaderMap WeakHashMap<String, String> headers);
 
     @POST
-    Observable<String> postRaw(@Url String url, @Body RequestBody body);
+    Observable<String> postRaw(@Url String url,
+                               @Body RequestBody body,
+                               @HeaderMap WeakHashMap<String, String> headers);
 
     @FormUrlEncoded
     @PUT
-    Observable<String> put(@Url String url, @FieldMap WeakHashMap<String, Object> params);
+    Observable<String> put(@Url String url,
+                           @FieldMap WeakHashMap<String, Object> params,
+                           @HeaderMap WeakHashMap<String, String> headers);
 
     @PUT
-    Observable<String> putRaw(@Url String url, @Body RequestBody body);
+    Observable<String> putRaw(@Url String url,
+                              @Body RequestBody body,
+                              @HeaderMap WeakHashMap<String, String> headers);
 
     @DELETE
-    Observable<String> delete(@Url String url, @QueryMap WeakHashMap<String, Object> params);
+    Observable<String> delete(@Url String url,
+                              @QueryMap WeakHashMap<String, Object> params,
+                              @HeaderMap WeakHashMap<String, String> headers);
 
     @Streaming
     @GET

@@ -23,4 +23,9 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
+    <style name="AnimHorizontal" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/ppw_scale_left_in</item>
+        <item name="android:windowExitAnimation">@anim/ppw_scale_left_out</item>
+    </style>
+
 </resources>

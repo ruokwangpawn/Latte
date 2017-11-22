@@ -16,6 +16,7 @@ import okhttp3.RequestBody;
 public final class RxRestClientBuilder {
 
     private static final WeakHashMap<String, Object> PARAMS = RestCreator.getParams();
+    private static final WeakHashMap<String, String> HEADERS = RestCreator.getHeaders();
     private String mUrl = null;
     private RequestBody mBody = null;
     private Context mContext = null;
@@ -26,6 +27,16 @@ public final class RxRestClientBuilder {
 
     public final RxRestClientBuilder url(String url) {
         this.mUrl = url;
+        return this;
+    }
+
+    public final RxRestClientBuilder headers(WeakHashMap<String, String> headers) {
+        HEADERS.putAll(headers);
+        return this;
+    }
+
+    public final RxRestClientBuilder header(String key, String value) {
+        HEADERS.put(key, value);
         return this;
     }
 
@@ -40,7 +51,7 @@ public final class RxRestClientBuilder {
     }
 
     public final RxRestClient build() {
-        return new RxRestClient(mUrl, PARAMS, mFile, mBody, mContext);
+        return new RxRestClient(mUrl, PARAMS, HEADERS, mFile, mBody, mContext);
     }
 
 }

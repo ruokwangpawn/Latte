@@ -66,6 +66,7 @@ public final class RequestCallback implements Callback<String> {
             @Override
             public void run() {
                 RestCreator.getParams().clear();
+                RestCreator.getHeaders().clear();
             }
         }, delayed);
     }

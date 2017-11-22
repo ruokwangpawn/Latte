@@ -7,25 +7,33 @@ import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.pawn.latte.R;
 import com.pawn.latte.base.lv.BaseLvAdapter;
 import com.pawn.latte.base.lv.BaseLvViewHolder;
 import com.pawn.latte.ccfin_cheap_detail.bean.CheapDetailResp;
 import com.pawn.latte.ccfin_cheap_detail.bean.CheapDetailResp.DiscountListBean;
 import com.pawn.latte.ccfin_cheap_detail.bean.CheapDetailResp.McDisRespBean;
-import com.pawn.latte.ccfin_cheap_detail.view.CustomDialog;
-import com.pawn.latte.ccfin_cheap_detail.view.ExpandTextView;
-import com.pawn.latte.ccfin_cheap_detail.view.ScrollListView;
+import com.pawn.latte.ccfin_cheap_detail.bean.PayBankListResp;
+import com.pawn.latte.ccfin_cheap_detail.bean.PayBankListResp.RedPacketResponseListBean;
+import com.pawn.latte.ccfin_cheap_detail.widget.CustomDialog;
+import com.pawn.latte.ccfin_cheap_detail.widget.CustomPopupWindow;
+import com.pawn.latte.ccfin_cheap_detail.widget.ExpandTextView;
+import com.pawn.latte.ccfin_cheap_detail.widget.MyStarBar;
+import com.pawn.latte.ccfin_cheap_detail.widget.ScrollListView;
 
 import org.goldian.ccfin_core.net.RestClient;
 import org.goldian.ccfin_core.net.callback.IError;
@@ -46,6 +54,8 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class CheapDetailActivity extends AppCompatActivity {
@@ -53,10 +63,10 @@ public class CheapDetailActivity extends AppCompatActivity {
     private static final String TAG = CheapDetailActivity.class.getSimpleName();
     private Context context;
 
-    private ScrollView scrollView;
+    private ImageView ivMcLogo, ivMcPhone;
+    private TextView tvMcName, tvMcAddress;
     private TabLayout tabLayout;
-    private ScrollListView lvDetail;
-    private ScrollListView lvPriceCompare;
+    private ListView lvDetail;
 
     private List<DiscountListBean> cheapDetailList = new ArrayList<>();
     private List<McDisRespBean> bottomMcList = new ArrayList<>();
@@ -64,33 +74,62 @@ public class CheapDetailActivity extends AppCompatActivity {
 
     private BaseLvAdapter<McDisRespBean> bottomMcAdapter;
     private BaseLvAdapter<DiscountListBean> detailAdapter;
+    private View detailBottomView;
+    private DetailBottomViewHolder bottomViewHolder;
+    private BaseLvAdapter<Object> priceAdapter;
+    private View detailTopView;
+    private DetailTopViewHolder topViewHolder;
+
+    private int scrollY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cheap_detail);
+        ButterKnife.bind(this);
         context = this;
 
-        scrollView = (ScrollView) findViewById(R.id.scrollView);
+        initView();
+
+        requestMcData();
+        requestPayListData();
+
+        // TODO:测试RxRestService
+        getRxServiceData();
+
+        // TODO:测试RxJava
+        testRxJava();
+    }
+
+    private void initView() {
+
+        ivMcLogo = (ImageView) findViewById(R.id.iv_mc_logo);
+        tvMcName = (TextView) findViewById(R.id.tv_mc_name);
+        tvMcAddress = (TextView) findViewById(R.id.tv_mc_address);
+        ivMcPhone = (ImageView) findViewById(R.id.iv_mc_phone);
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
-        lvDetail = (ScrollListView) findViewById(R.id.lv_detail);
-        lvPriceCompare = (ScrollListView) findViewById(R.id.lv_price_compare);
-        View detailBottomView = LayoutInflater.from(this).inflate(R.layout.cheap_detail_bottom, null);
-        DetailBottomViewHolder bottomViewHolder = new DetailBottomViewHolder(detailBottomView);
+        lvDetail = (ListView) findViewById(R.id.lv_detail);
+        detailTopView = LayoutInflater.from(this).inflate(R.layout.cheap_detail_top, null);
+        topViewHolder = new DetailTopViewHolder(detailTopView);
+        detailBottomView = LayoutInflater.from(this).inflate(R.layout.cheap_detail_bottom, null);
+        bottomViewHolder = new DetailBottomViewHolder(detailBottomView);
 
-        scrollView.smoothScrollTo(0, 0);
-
-        lvDetail.addFooterView(detailBottomView);
         detailAdapter = new BaseLvAdapter<DiscountListBean>(this, cheapDetailList, R.layout.item_cheap_detail) {
             @Override
             public void convert(BaseLvViewHolder viewHolder, DiscountListBean item, int position) {
                 ExpandTextView detailContent = viewHolder.getView(R.id.detail_content);
-                detailContent.setText("告白气球告白气球告白气球告白气球告白气球告白气球告白气球告白气球" +
-                        "告白气球告白气球告白气球告白气球告白气球告白气球告白气球告白气球告白气球" +
-                        "告白气球告白气球告白气球告白气球告白气球告白气球告白气球告白气球告白气球" +
-                        "告白气球告白气球告白气球告白气球告白气球告白气球告白气球告白气球告白气球" +
-                        "告白气球告白气球告白气球告白气球告白气球告白气球告白气球告白气球告白气球" +
-                        "告白气球告白气球告白气球告白气球告白气球告白气球告白气球告白气球告白气球", true);
+//                detailContent.setText(item.getDis_content(), true);
+                detailContent.setText("1111111111111111111111111111111111111111111111111111111111111" +
+                        "11111111111111111111111111111111111111111111111111111111111111111111111111" +
+                        "11111111111111111111111111111111111111111111111111111111111111111111111111" +
+                        "11111111111111111111111111111111111111111111111111111111111111111111111111", true);
+
+//                TextView tvDisTitle = viewHolder.getView(R.id.tv_dis_title);
+//                StringBuilder disTitle =
+//                        new StringBuilder(item.getBank_name())
+//                                .append("：")
+//                                .append(item.getDis_keywords());
+//                tvDisTitle.setText(disTitle);
 
                 detailContent.setListener(new ExpandTextView.OnExpandStateChangeListener() {
                     @Override
@@ -100,7 +139,23 @@ public class CheapDetailActivity extends AppCompatActivity {
                 });
             }
         };
+
+        for (int i = 0; i < 7; i++) {
+            priceCompareList.add("");
+        }
+
+        priceAdapter = new BaseLvAdapter<Object>(this, priceCompareList, R.layout.item_cheap_price_compare) {
+
+            @Override
+            public void convert(BaseLvViewHolder viewHolder, Object item, int position) {
+                TextView tvPreMoney = viewHolder.getView(R.id.tv_pre_money);
+                tvPreMoney.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+            }
+        };
+        lvDetail.addHeaderView(detailTopView);
+        lvDetail.addFooterView(detailBottomView);
         lvDetail.setAdapter(detailAdapter);
+
 
         bottomMcAdapter = new BaseLvAdapter<McDisRespBean>(this, bottomMcList, R.layout.item_cheap_mc) {
             @Override
@@ -115,51 +170,77 @@ public class CheapDetailActivity extends AppCompatActivity {
                 Toast.makeText(context, "" + position, Toast.LENGTH_SHORT).show();
             }
         });
+
+        final List<String> payList = new ArrayList<>();
+        payList.add("");
+        payList.add("");
+        final View payTypeListView = View.inflate(this, R.layout.dialog_pay, null);
+        final ListView lvPayType = payTypeListView.findViewById(R.id.lv_pay_type);
+        final BaseLvAdapter<String> payListAdapter = new BaseLvAdapter<String>(this, payList, R.layout.item_pay_for_cheap) {
+
+            @Override
+            public void convert(BaseLvViewHolder viewHolder, String item, int position) {
+
+            }
+        };
+        lvPayType.setAdapter(payListAdapter);
+        final CustomDialog dialog = new CustomDialog.Build(context)
+                .cancelTouchOut(false)
+                .style(R.style.CustomDialog)
+                .view(payTypeListView)
+                .widthDp(270)
+                .heightDp(300)
+                .build();
+
         bottomViewHolder.rlCheapWrong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                CustomDialog dialog = new CustomDialog.Build(context)
-                        .cancelTouchOut(false)
-                        .style(R.style.CustomDialog)
-                        .view(R.layout.dialog_cheap_wrong_info)
-                        .heightDp(340)
-                        .widthDp(270)
-                        .build();
+                payListAdapter.notifyDataSetChanged();
                 dialog.show();
+                payList.add("");
             }
         });
 
-        for (int i = 0; i < 7; i++) {
-            priceCompareList.add("");
-        }
-
-        lvPriceCompare.setAdapter(new BaseLvAdapter<Object>(this, priceCompareList, R.layout.item_cheap_price_compare) {
-
+        // TODO: 2017/11/17 BasePopupWindow测试
+        final CustomPopupWindow popupWindow = new CustomPopupWindow.Build(context)
+                .setHeightAndWidthDp(75, WindowManager.LayoutParams.WRAP_CONTENT)
+                .setCanTouchOutside(false)
+                .setFocusable(true)
+                .setAnimStyle(R.style.AnimHorizontal)
+                .setContentView(R.layout.item_cheap_price_compare)
+                .build();
+        bottomViewHolder.btPay.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void convert(BaseLvViewHolder viewHolder, Object item, int position) {
-                TextView tvPreMoney = viewHolder.getView(R.id.tv_pre_money);
-                tvPreMoney.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+            public void onClick(View v) {
+                float alpha = bottomViewHolder.btPay.getAlpha();
+                popupWindow.showAsLocation(v, Gravity.CENTER, 0, 0);
+                float alpha1 = bottomViewHolder.btPay.getAlpha();
+                Log.e(TAG, "onClick: preAlpha: " + alpha + "---afterAlpha: " + alpha1);
             }
         });
 
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        topViewHolder.tablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                int scrollX = scrollView.getScrollX();
-                int scrollY = scrollView.getScrollY();
 
                 String tabTitle = tab.getText().toString();
                 if ("优惠详情".equals(tabTitle)) {
-                    lvDetail.setVisibility(View.VISIBLE);
-                    lvPriceCompare.setVisibility(View.GONE);
+
+                    lvDetail.addFooterView(detailBottomView);
+                    lvDetail.setAdapter(detailAdapter);
+
+                    bottomViewHolder.btPay.setVisibility(View.VISIBLE);
 
                 } else if ("买单比价".equals(tabTitle)) {
-                    lvDetail.setVisibility(View.GONE);
-                    lvPriceCompare.setVisibility(View.VISIBLE);
+
+                    lvDetail.removeFooterView(detailBottomView);
+                    lvDetail.setAdapter(priceAdapter);
+
+                    bottomViewHolder.btPay.setVisibility(View.GONE);
+
                 }
-                scrollView.smoothScrollTo(0, 0);
+
             }
 
             @Override
@@ -172,9 +253,12 @@ public class CheapDetailActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void requestMcData() {
 
         WeakHashMap<String, Object> params = new WeakHashMap<>();
-        params.put("ticket", "1");
+        params.put("ticket", "aadf1479-a8a0-474d-ad7e-b9aff3f4c23d");
         params.put("uid", "-1");
         params.put("mc_id", "28361");
         params.put("isNear", 1);
@@ -188,45 +272,54 @@ public class CheapDetailActivity extends AppCompatActivity {
                 .onSuccess(new ISuccess() {
                     @Override
                     public void onSuccess(String response) {
-                        Gson gson = new Gson();
-                        CheapDetailResp detailResp = gson.fromJson(response, CheapDetailResp.class);
-                        String code = detailResp.getCode();
-                        if ("200".equals(code)) {
-                            // 不同银行所对应的优惠
-                            List<DiscountListBean> discountList = detailResp.getDiscountList();
-                            if (discountList != null) {
-                                cheapDetailList.clear();
-                                cheapDetailList.add(new DiscountListBean());
-                                cheapDetailList.add(new DiscountListBean());
-                                cheapDetailList.add(new DiscountListBean());
-                                cheapDetailList.add(new DiscountListBean());
-                                cheapDetailList.add(new DiscountListBean());
-                                cheapDetailList.addAll(discountList);
-                                if (detailAdapter != null) {
-                                    detailAdapter.notifyDataSetChanged();
-                                }
-                            }
+                        try {
+                            Gson gson = new Gson();
+                            CheapDetailResp detailResp = gson.fromJson(response, CheapDetailResp.class);
+                            String code = detailResp.getCode();
+                            if ("200".equals(code)) {
+                                String logoImageUrl = detailResp.getBand_logo_image_url();
 
 
-                            // 该品牌所对应的最近的几个门店(最多三条)---其中第一条显示到top，剩下的显示到bottom
-                            List<McDisRespBean> mcDisRespList = detailResp.getMcDisRespList();
-                            if (mcDisRespList != null) {
-                                if (mcDisRespList.size() >= 1) {
-                                    // 拿到第一条数据显示到top
-                                    McDisRespBean mcBean = mcDisRespList.remove(0);
-
-
-                                    if (mcDisRespList.size() > 0) {
-                                        // 用一个集合来存储剩下的门店
-                                        bottomMcList.clear();
-                                        bottomMcList.addAll(mcDisRespList);
-                                        if (bottomMcAdapter != null) {
-                                            bottomMcAdapter.notifyDataSetChanged();
-                                        }
+                                // 不同银行所对应的优惠
+                                List<DiscountListBean> discountList = detailResp.getDiscountList();
+                                if (discountList != null) {
+                                    cheapDetailList.clear();
+                                    cheapDetailList.add(new DiscountListBean());
+//                                    cheapDetailList.add(new DiscountListBean());
+//                                    cheapDetailList.add(new DiscountListBean());
+//                                    cheapDetailList.add(new DiscountListBean());
+                                    cheapDetailList.addAll(discountList);
+                                    if (detailAdapter != null) {
+                                        detailAdapter.notifyDataSetChanged();
                                     }
+                                }
 
+
+                                // 该品牌所对应的最近的几个门店(最多三条)---其中第一条显示到top，剩下的显示到bottom
+                                List<McDisRespBean> mcDisRespList = detailResp.getMcDisRespList();
+                                if (mcDisRespList != null) {
+                                    if (mcDisRespList.size() >= 1) {
+                                        // 拿到第一条数据显示到top
+                                        McDisRespBean mcBean = mcDisRespList.remove(0);
+                                        // 设置当前门店名
+                                        topViewHolder.tvMcName.setText(mcBean.getMc_name());
+                                        topViewHolder.tvMcAddress.setText(mcBean.getAddress());
+
+
+                                        if (mcDisRespList.size() > 0) {
+                                            // 用一个集合来存储剩下的门店
+                                            bottomMcList.clear();
+                                            bottomMcList.addAll(mcDisRespList);
+                                            if (bottomMcAdapter != null) {
+                                                bottomMcAdapter.notifyDataSetChanged();
+                                            }
+                                        }
+
+                                    }
                                 }
                             }
+                        } catch (JsonSyntaxException e) {
+                            e.printStackTrace();
                         }
                     }
                 })
@@ -244,12 +337,47 @@ public class CheapDetailActivity extends AppCompatActivity {
                 })
                 .build()
                 .get();
+    }
 
-        // TODO:测试RxRestService
-        getRxServiceData();
+    private void requestPayListData() {
 
-        // TODO:测试RxJava
-        testRxJava();
+        WeakHashMap<String, Object> params = new WeakHashMap<>();
+        params.put("ticket", "aadf1479-a8a0-474d-ad7e-b9aff3f4c23d");
+        params.put("uid", "-1");
+        params.put("mc_id", "28361");
+        RxRestClient.builder()
+                .url("ccfin-business-service-1.0/api/v1/business/getPayBankList")
+                .header("token", "")
+                .params(params)
+                .build()
+                .get()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        Gson gson = new Gson();
+                        try {
+                            PayBankListResp payBankListResp = gson.fromJson(s, PayBankListResp.class);
+                            String code = payBankListResp.getCode();
+                            if ("200".equals(code)) {
+                                List<RedPacketResponseListBean> redPacketList = payBankListResp.getRedPacketList();
+                            }
+                        } catch (JsonSyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+
+                    }
+                });
     }
 
     private void testRxJava() {
@@ -335,7 +463,7 @@ public class CheapDetailActivity extends AppCompatActivity {
 
                     @Override
                     public void onComplete() {
-
+                        Log.e(TAG, "onComplete: Success");
                     }
                 });
     }
@@ -354,6 +482,40 @@ public class CheapDetailActivity extends AppCompatActivity {
         Button btPay;
 
         DetailBottomViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
+    }
+
+    class DetailTopViewHolder {
+
+        @BindView(R.id.iv_mc_logo)
+        ImageView ivMcLogo;
+        @BindView(R.id.tv_mc_name)
+        TextView tvMcName;
+        @BindView(R.id.iv_tag1_discount)
+        ImageView ivTag1Discount;
+        @BindView(R.id.iv_tag2_special_cheap)
+        ImageView ivTag2SpecialCheap;
+        @BindView(R.id.iv_tag3_exchange)
+        ImageView ivTag3Exchange;
+        @BindView(R.id.iv_tag4_reduce)
+        ImageView ivTag4Reduce;
+        @BindView(R.id.tv_distance)
+        TextView tvDistance;
+        @BindView(R.id.mc_star)
+        MyStarBar mcStar;
+        @BindView(R.id.tv_price)
+        TextView tvPrice;
+        @BindView(R.id.tv_cate_name)
+        TextView tvCateName;
+        @BindView(R.id.tv_mc_address)
+        TextView tvMcAddress;
+        @BindView(R.id.iv_mc_phone)
+        ImageView ivMcPhone;
+        @BindView(R.id.tablayout)
+        TabLayout tablayout;
+
+        DetailTopViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
     }

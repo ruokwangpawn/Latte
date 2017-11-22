@@ -16,7 +16,7 @@ public class LatteApplication extends Application {
 
         Latte.init(this)
                 .withApiHost("http://wwwtest.99love.com/")
-                .withLoaderDelayed(1000)
+                .withLoaderDelayed(200)
                 .configure();
     }
 }

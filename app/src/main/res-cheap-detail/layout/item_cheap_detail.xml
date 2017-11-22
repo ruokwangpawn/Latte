@@ -22,17 +22,20 @@
             android:src="@mipmap/ic_launcher" />
 
         <TextView
+            android:id="@+id/tv_dis_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_6"
             android:layout_weight="1"
             android:ellipsize="end"
+            android:maxLines="1"
             android:text="交通银行：满200减10"
             android:textColor="#333333"
             android:textSize="13dp"
             android:textStyle="bold" />
 
         <Button
+            android:id="@+id/bt_apply_card"
             android:layout_width="@dimen/dp_55"
             android:layout_height="@dimen/dp_23"
             android:background="@null"
@@ -46,7 +49,7 @@
         android:layout_marginLeft="@dimen/dp_10"
         android:background="#DFDFDF" />
 
-    <com.pawn.latte.ccfin_cheap_detail.view.ExpandTextView
+    <com.pawn.latte.ccfin_cheap_detail.widget.ExpandTextView
         android:id="@+id/detail_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -67,7 +70,7 @@
             android:layout_gravity="center_horizontal"
             android:text="展开" />
 
-    </com.pawn.latte.ccfin_cheap_detail.view.ExpandTextView>
+    </com.pawn.latte.ccfin_cheap_detail.widget.ExpandTextView>
 
     <include layout="@layout/space_20px" />
 

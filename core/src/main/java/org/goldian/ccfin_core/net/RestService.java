@@ -11,6 +11,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.HeaderMap;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -26,24 +27,37 @@ import retrofit2.http.Url;
 public interface RestService {
 
     @GET
-    Call<String> get(@Url String url, @QueryMap WeakHashMap<String, Object> params);
+    Call<String> get(
+            @Url String url,
+            @QueryMap WeakHashMap<String, Object> params,
+            @HeaderMap WeakHashMap<String, String> headers);
 
     @FormUrlEncoded
     @POST
-    Call<String> post(@Url String url, @FieldMap WeakHashMap<String, Object> params);
+    Call<String> post(@Url String url,
+                      @FieldMap WeakHashMap<String, Object> params,
+                      @HeaderMap WeakHashMap<String, String> headers);
 
     @POST
-    Call<String> postRaw(@Url String url, @Body RequestBody body);
+    Call<String> postRaw(@Url String url,
+                         @Body RequestBody body,
+                         @HeaderMap WeakHashMap<String, String> headers);
 
     @FormUrlEncoded
     @PUT
-    Call<String> put(@Url String url, @FieldMap WeakHashMap<String, Object> params);
+    Call<String> put(@Url String url,
+                     @FieldMap WeakHashMap<String, Object> params,
+                     @HeaderMap WeakHashMap<String, String> headers);
 
     @PUT
-    Call<String> putRaw(@Url String url, @Body RequestBody body);
+    Call<String> putRaw(@Url String url,
+                        @Body RequestBody body,
+                        @HeaderMap WeakHashMap<String, String> headers);
 
     @DELETE
-    Call<String> delete(@Url String url, @QueryMap WeakHashMap<String, Object> params);
+    Call<String> delete(@Url String url,
+                        @QueryMap WeakHashMap<String, Object> params,
+                        @HeaderMap WeakHashMap<String, String> headers);
 
     @Streaming
     @GET

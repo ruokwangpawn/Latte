@@ -25,14 +25,17 @@ import okhttp3.RequestBody;
 public final class RxRestClient {
 
     private static final WeakHashMap<String, Object> PARAMS = RestCreator.getParams();
+    private static final WeakHashMap<String, String> HEADERS = RestCreator.getHeaders();
     private final String URL;
     private final RequestBody BODY;
     private final File FILE;
     private final Context CONTEXT;
 
-    RxRestClient(String url, Map<String, Object> params, File file, RequestBody body, Context context) {
+    RxRestClient(String url, Map<String, Object> params, Map<String, String> headers,
+                 File file, RequestBody body, Context context) {
         this.URL = url;
         PARAMS.putAll(params);
+        HEADERS.putAll(headers);
         this.FILE = file;
         this.BODY = body;
         this.CONTEXT = context;
@@ -48,22 +51,22 @@ public final class RxRestClient {
 
         switch (method) {
             case GET:
-                observable = service.get(URL, PARAMS);
+                observable = service.get(URL, PARAMS, HEADERS);
                 break;
             case POST:
-                observable = service.post(URL, PARAMS);
+                observable = service.post(URL, PARAMS, HEADERS);
                 break;
             case POST_RAW:
-                observable = service.postRaw(URL, BODY);
+                observable = service.postRaw(URL, BODY, HEADERS);
                 break;
             case PUT:
-                observable = service.put(URL, PARAMS);
+                observable = service.put(URL, PARAMS, HEADERS);
                 break;
             case PUT_RAW:
-                observable = service.putRaw(URL, BODY);
+                observable = service.putRaw(URL, BODY, HEADERS);
                 break;
             case DELETE:
-                observable = service.delete(URL, PARAMS);
+                observable = service.delete(URL, PARAMS, HEADERS);
                 break;
             case UPLOAD:
 
@@ -72,6 +75,7 @@ public final class RxRestClient {
                 break;
         }
 
+        // TODO:这里能否做公共处理？
         if (observable != null) {
             observable.doOnSubscribe(new Consumer<Disposable>() {
                 @Override

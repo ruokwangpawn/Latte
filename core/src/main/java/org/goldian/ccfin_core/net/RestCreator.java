@@ -29,6 +29,14 @@ public final class RestCreator {
         return ParamsHolder.PARAMS;
     }
 
+    private static final class HeadersHolder {
+        private static final WeakHashMap<String, String> HEADERS = new WeakHashMap<>();
+    }
+
+    public static WeakHashMap<String,String> getHeaders() {
+        return HeadersHolder.HEADERS;
+    }
+
     private static final class OKHttpHolder {
         private static final int TIME_OUT = 60;
         private static final OkHttpClient.Builder BUILDER = new OkHttpClient.Builder();
