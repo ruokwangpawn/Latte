@@ -29,6 +29,9 @@ public final class RestCreator {
         return ParamsHolder.PARAMS;
     }
 
+    /**
+     * Header容器
+     */
     private static final class HeadersHolder {
         private static final WeakHashMap<String, String> HEADERS = new WeakHashMap<>();
     }
