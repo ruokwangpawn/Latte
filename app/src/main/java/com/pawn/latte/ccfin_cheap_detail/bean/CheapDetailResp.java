@@ -250,7 +250,17 @@ public class CheapDetailResp {
         private int id;
         private int dis_type;
         private int is_effective;
-        private List<DiscountTitleContentBean> discount_title_content;
+        private List<DiscountTitleContent> discount_title_content;
+
+        private boolean isExpaned;
+
+        public boolean isExpaned() {
+            return isExpaned;
+        }
+
+        public void setExpaned(boolean expaned) {
+            isExpaned = expaned;
+        }
 
         public String getApply_card_url() {
             return apply_card_url;
@@ -380,15 +390,15 @@ public class CheapDetailResp {
             this.is_effective = is_effective;
         }
 
-        public List<DiscountTitleContentBean> getDiscount_title_content() {
+        public List<DiscountTitleContent> getDiscountTitleContent() {
             return discount_title_content;
         }
 
-        public void setDiscount_title_content(List<DiscountTitleContentBean> discount_title_content) {
+        public void setDiscount_title_content(List<DiscountTitleContent> discount_title_content) {
             this.discount_title_content = discount_title_content;
         }
 
-        public static class DiscountTitleContentBean {
+        public static class DiscountTitleContent {
             /**
              * title_id : 101
              * title_name : 活动内容 仅限银联卡使用 限银联卡

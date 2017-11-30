@@ -1,5 +1,6 @@
 package com.pawn.latte.ccfin_cheap_detail.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -118,6 +119,7 @@ public class ExpandTextView extends LinearLayout {
         return isAnimate;
     }
 
+    @SuppressLint("DrawAllocation")
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);

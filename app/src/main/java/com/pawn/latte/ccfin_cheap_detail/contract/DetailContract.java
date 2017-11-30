@@ -15,6 +15,11 @@ public interface DetailContract {
 
         void hideProgress();
 
+        void notifyDetail();
+
+        void notifyPayList();
+
+
         void changeCollectionIcon();
 
         void showShareDialog();

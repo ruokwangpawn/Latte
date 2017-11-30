@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -26,6 +27,8 @@ import com.pawn.latte.base.lv.BaseLvAdapter;
 import com.pawn.latte.base.lv.BaseLvViewHolder;
 import com.pawn.latte.ccfin_cheap_detail.bean.CheapDetailResp;
 import com.pawn.latte.ccfin_cheap_detail.bean.CheapDetailResp.DiscountListBean;
+import com.pawn.latte.ccfin_cheap_detail.bean.CheapDetailResp.DiscountListBean.DiscountTitleContent;
+import com.pawn.latte.ccfin_cheap_detail.bean.CheapDetailResp.DiscountListBean.DiscountTitleContent.TitleContentBean;
 import com.pawn.latte.ccfin_cheap_detail.bean.CheapDetailResp.McDisRespBean;
 import com.pawn.latte.ccfin_cheap_detail.bean.PayBankListResp;
 import com.pawn.latte.ccfin_cheap_detail.bean.PayBankListResp.RedPacketResponseListBean;
@@ -61,12 +64,11 @@ import io.reactivex.schedulers.Schedulers;
 public class CheapDetailActivity extends AppCompatActivity {
 
     private static final String TAG = CheapDetailActivity.class.getSimpleName();
+
     private Context context;
 
-    private ImageView ivMcLogo, ivMcPhone;
-    private TextView tvMcName, tvMcAddress;
-    private TabLayout tabLayout;
-    private ListView lvDetail;
+    @BindView(R.id.lv_detail)
+    ListView lvDetail;
 
     private List<DiscountListBean> cheapDetailList = new ArrayList<>();
     private List<McDisRespBean> bottomMcList = new ArrayList<>();
@@ -79,8 +81,6 @@ public class CheapDetailActivity extends AppCompatActivity {
     private BaseLvAdapter<Object> priceAdapter;
     private View detailTopView;
     private DetailTopViewHolder topViewHolder;
-
-    private int scrollY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,38 +103,57 @@ public class CheapDetailActivity extends AppCompatActivity {
 
     private void initView() {
 
-        ivMcLogo = (ImageView) findViewById(R.id.iv_mc_logo);
-        tvMcName = (TextView) findViewById(R.id.tv_mc_name);
-        tvMcAddress = (TextView) findViewById(R.id.tv_mc_address);
-        ivMcPhone = (ImageView) findViewById(R.id.iv_mc_phone);
-        tabLayout = (TabLayout) findViewById(R.id.tablayout);
-        lvDetail = (ListView) findViewById(R.id.lv_detail);
         detailTopView = LayoutInflater.from(this).inflate(R.layout.cheap_detail_top, null);
         topViewHolder = new DetailTopViewHolder(detailTopView);
         detailBottomView = LayoutInflater.from(this).inflate(R.layout.cheap_detail_bottom, null);
         bottomViewHolder = new DetailBottomViewHolder(detailBottomView);
 
+        // 优惠详情列表的adapter
         detailAdapter = new BaseLvAdapter<DiscountListBean>(this, cheapDetailList, R.layout.item_cheap_detail) {
             @Override
-            public void convert(BaseLvViewHolder viewHolder, DiscountListBean item, int position) {
-                ExpandTextView detailContent = viewHolder.getView(R.id.detail_content);
-//                detailContent.setText(item.getDis_content(), true);
-                detailContent.setText("1111111111111111111111111111111111111111111111111111111111111" +
-                        "11111111111111111111111111111111111111111111111111111111111111111111111111" +
-                        "11111111111111111111111111111111111111111111111111111111111111111111111111" +
-                        "11111111111111111111111111111111111111111111111111111111111111111111111111", true);
+            public void convert(BaseLvViewHolder viewHolder, final DiscountListBean item, int position) {
+                // 设置默认不展开
+                item.setExpaned(true);
 
-//                TextView tvDisTitle = viewHolder.getView(R.id.tv_dis_title);
-//                StringBuilder disTitle =
-//                        new StringBuilder(item.getBank_name())
-//                                .append("：")
-//                                .append(item.getDis_keywords());
-//                tvDisTitle.setText(disTitle);
+                ExpandTextView detailContent = viewHolder.getView(R.id.detail_content);
+                TextView tvDisTitle = viewHolder.getView(R.id.tv_dis_title);
+
+                String bankName = item.getBank_name();
+                String bank_id = item.getBank_id();
+                String bankLogoUrl = item.getBank_logo_url();
+                if (TextUtils.isEmpty(bankName)) {
+                    bankName = "各大银行";
+                }
+                String disKeywords = item.getDis_keywords();
+                tvDisTitle.setText(new StringBuilder(bankName).append("：").append(disKeywords));
+
+                StringBuilder disContent = new StringBuilder();
+                List<DiscountTitleContent> discountTitleContent = item.getDiscountTitleContent();
+                if (discountTitleContent != null) {
+                    for (int i = 0; i < discountTitleContent.size(); i++) {
+                        DiscountTitleContent bean = discountTitleContent.get(i);
+                        String titleName = bean.getTitle_name();
+                        disContent.append(titleName).append("\n");
+
+                        List<TitleContentBean> contentList = bean.getTitle_content();
+                        for (int j = 0; j < contentList.size(); j++) {
+                            TitleContentBean titleContentBean = contentList.get(j);
+                            String content = titleContentBean.getContentName();
+                            // 当两个索引同时为最后一个时说明已经到了最后，则不需要换行
+                            if (i + 1 == discountTitleContent.size() && j + 1 == contentList.size()) {
+                                disContent.append(content);
+                            } else {
+                                disContent.append(content).append("\n");
+                            }
+                        }
+                    }
+                    detailContent.setText(disContent.toString(), item.isExpaned());
+                }
 
                 detailContent.setListener(new ExpandTextView.OnExpandStateChangeListener() {
                     @Override
                     public void onExpandStateChanged(boolean isExpanded) {
-
+                        item.setExpaned(isExpanded);
                     }
                 });
             }
@@ -144,6 +163,7 @@ public class CheapDetailActivity extends AppCompatActivity {
             priceCompareList.add("");
         }
 
+        // 比价的adapter
         priceAdapter = new BaseLvAdapter<Object>(this, priceCompareList, R.layout.item_cheap_price_compare) {
 
             @Override
@@ -152,11 +172,12 @@ public class CheapDetailActivity extends AppCompatActivity {
                 tvPreMoney.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
             }
         };
+        // ListView增加头尾布局
         lvDetail.addHeaderView(detailTopView);
         lvDetail.addFooterView(detailBottomView);
         lvDetail.setAdapter(detailAdapter);
 
-
+        // 该商户下本门店周边的其他门店(最多显示两家)
         bottomMcAdapter = new BaseLvAdapter<McDisRespBean>(this, bottomMcList, R.layout.item_cheap_mc) {
             @Override
             public void convert(BaseLvViewHolder viewHolder, McDisRespBean item, int position) {
@@ -167,10 +188,11 @@ public class CheapDetailActivity extends AppCompatActivity {
         bottomViewHolder.lvOtherMc.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(context, "" + position, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "跳转H5导航" + position, Toast.LENGTH_SHORT).show();
             }
         });
 
+        // 支付列表
         final List<String> payList = new ArrayList<>();
         payList.add("");
         payList.add("");
@@ -210,6 +232,8 @@ public class CheapDetailActivity extends AppCompatActivity {
                 .setAnimStyle(R.style.AnimHorizontal)
                 .setContentView(R.layout.item_cheap_price_compare)
                 .build();
+
+        // 支付
         bottomViewHolder.btPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -220,6 +244,7 @@ public class CheapDetailActivity extends AppCompatActivity {
             }
         });
 
+        // 两个标签
         topViewHolder.tablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -260,8 +285,8 @@ public class CheapDetailActivity extends AppCompatActivity {
         WeakHashMap<String, Object> params = new WeakHashMap<>();
         params.put("ticket", "aadf1479-a8a0-474d-ad7e-b9aff3f4c23d");
         params.put("uid", "-1");
-        params.put("mc_id", "28361");
-        params.put("isNear", 1);
+        params.put("mc_id", "28368");
+        params.put("isNear", 0);
         params.put("point_x", 121.5099f);
         params.put("point_y", 31.2289f);
         params.put("category_id", "-1");
@@ -277,17 +302,52 @@ public class CheapDetailActivity extends AppCompatActivity {
                             CheapDetailResp detailResp = gson.fromJson(response, CheapDetailResp.class);
                             String code = detailResp.getCode();
                             if ("200".equals(code)) {
+                                // 是否是线上门店
+                                int isSpecial = detailResp.getIsSpecial();
+                                // 是否收藏
+                                int isCollect = detailResp.getIsCollect();
+                                // 是否是特约商家
+                                int isPreference = detailResp.getIs_preference();
+                                // 商家Logo
                                 String logoImageUrl = detailResp.getBand_logo_image_url();
+                                // 商家名
+                                String bandName = detailResp.getBand_name();
+                                // 人均消费
+                                int avgConsume = detailResp.getAvg_consumption();
+                                topViewHolder.tvPrice.setText(new StringBuilder("¥").append(avgConsume).append("/人"));
+                                // 星级
+                                int starCount = detailResp.getPraise_point();
+                                topViewHolder.mcStar.setStarMark((float) (starCount) / 2);
+                                // 分类名
+                                String catName = detailResp.getCat_name();
+                                topViewHolder.tvCateName.setText(catName);
+                                // 当前区域总共有多少门店
+                                int totalMcCount = detailResp.getTotal_merchant_count();
+                                // 城市
+                                String city = detailResp.getCity();
+                                bottomViewHolder.tvAllMcCount.setText(
+                                        new StringBuilder()
+                                                .append(city)
+                                                .append("  所有优惠门店（")
+                                                .append(totalMcCount)
+                                                .append("）"));
+
+
+                                // 满减、折扣等优惠的集合
+                                List<String> disTypes = detailResp.getDis_typeArray();
 
 
                                 // 不同银行所对应的优惠
                                 List<DiscountListBean> discountList = detailResp.getDiscountList();
                                 if (discountList != null) {
                                     cheapDetailList.clear();
-                                    cheapDetailList.add(new DiscountListBean());
-//                                    cheapDetailList.add(new DiscountListBean());
-//                                    cheapDetailList.add(new DiscountListBean());
-//                                    cheapDetailList.add(new DiscountListBean());
+//                                    if (discountList.size() < 2) {
+//
+//                                        cheapDetailList.add(new DiscountListBean());
+//                                        cheapDetailList.add(new DiscountListBean());
+//                                        cheapDetailList.add(new DiscountListBean());
+//                                        cheapDetailList.add(new DiscountListBean());
+//                                    }
                                     cheapDetailList.addAll(discountList);
                                     if (detailAdapter != null) {
                                         detailAdapter.notifyDataSetChanged();
@@ -302,8 +362,21 @@ public class CheapDetailActivity extends AppCompatActivity {
                                         // 拿到第一条数据显示到top
                                         McDisRespBean mcBean = mcDisRespList.remove(0);
                                         // 设置当前门店名
-                                        topViewHolder.tvMcName.setText(mcBean.getMc_name());
-                                        topViewHolder.tvMcAddress.setText(mcBean.getAddress());
+                                        String mcName = mcBean.getMc_name();
+                                        topViewHolder.tvMcName.setText(mcName);
+                                        // 设置当前门店地址
+                                        String address = mcBean.getAddress();
+                                        topViewHolder.tvMcAddress.setText(address);
+                                        // 是否是海外门店
+                                        int overSeas = mcBean.getOverSeas();
+                                        // 导航地图H5地址
+                                        String mapUrl = mcBean.getMapUrl();
+                                        // 商家电话
+                                        String phone = mcBean.getPhone();
+                                        // 商家距离当前位置的距离
+                                        String distance = mcBean.getDistance();
+                                        // mc_id
+                                        String mc_id = mcBean.getMc_id();
 
 
                                         if (mcDisRespList.size() > 0) {
