@@ -6,7 +6,7 @@ package com.pawn.latte;
 
 public interface IBasePresenter {
 
-    void subscribe();
+    void subscribe(IBaseView view);
 
     void unSubscribe();
 

@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.pawn.latte.R;
+
 import org.goldian.ccfin_core.utils.DisplayUtil;
 
 /**
@@ -23,7 +25,7 @@ public class CustomDialog extends Dialog {
     private View contentView;
 
     private CustomDialog(Build build) {
-        super(build.context);
+        super(build.context, R.style.CustomDialog);
         height = build.height;
         width = build.width;
         cancelTouchOut = build.cancelTouchOut;

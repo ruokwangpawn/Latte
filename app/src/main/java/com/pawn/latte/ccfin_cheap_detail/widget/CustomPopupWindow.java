@@ -32,7 +32,6 @@ public class CustomPopupWindow extends PopupWindow {
         mPopupWindow.setOnDismissListener(new OnDismissListener() {
             @Override
             public void onDismiss() {
-
                 setBackgroundAlpha(1.0f);
                 setOnDismissListener(this);
             }
