@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
 
@@ -52,5 +52,4 @@ dependencies {
     compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.4@aar'
     // RxLifecycle
     compile 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
-
 }
