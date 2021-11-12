@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 30
+    buildToolsVersion '30.0.2'
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 27
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
@@ -22,34 +22,34 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support:design:26.1.0'
-    compile 'com.android.support:recyclerview-v7:26.1.0'
-    testCompile 'junit:junit:4.12'
+    api 'com.android.support:appcompat-v7:26.1.0'
+    api 'com.android.support:design:26.1.0'
+    api 'com.android.support:recyclerview-v7:26.1.0'
+    testImplementation 'junit:junit:4.13.2'
     //网络请求依赖---Retrofit2
-    compile 'com.squareup.okio:okio:1.13.0'
-    compile 'com.squareup.okhttp3:okhttp:3.9.0'
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-    compile 'com.squareup.retrofit2:converter-scalars:2.3.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    api 'com.squareup.okio:okio:2.6.0'
+    api 'com.squareup.okhttp3:okhttp:3.12.12'
+    api 'com.squareup.retrofit2:retrofit:2.5.0'
+    api 'com.squareup.retrofit2:converter-gson:2.4.0'
+    api 'com.squareup.retrofit2:converter-scalars:2.4.0'
+    api 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
     // Json转Bean---Gson
-    compile 'com.google.code.gson:gson:2.8.2'
+    api 'com.google.code.gson:gson:2.8.6'
     // 图片加载库---Glide
-    compile 'com.github.bumptech.glide:glide:4.3.1'
+    api 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
-    compile 'com.github.bumptech.glide:okhttp3-integration:4.3.1'
-    compile 'com.github.bumptech.glide:recyclerview-integration:4.3.1'
-    compile 'com.github.bumptech.glide:disklrucache:4.3.1'
+    api 'com.github.bumptech.glide:okhttp3-integration:4.3.1'
+    api 'com.github.bumptech.glide:recyclerview-integration:4.3.1'
+    api 'com.github.bumptech.glide:disklrucache:4.9.0'
     // RxJava
-    compile 'io.reactivex.rxjava2:rxjava:2.1.5'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    api 'io.reactivex.rxjava2:rxjava:2.2.19'
+    api 'io.reactivex.rxjava2:rxandroid:2.1.1'
     // RxPermission
-    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.4@aar'
+    api 'com.tbruyelle.rxpermissions:rxpermissions:0.9.4@aar'
     // RxLifecycle
-    compile 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
+    api 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
 }
